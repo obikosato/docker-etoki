@@ -7,6 +7,7 @@ services:
       - type: bind
         source: ./src
         target: /my-work
+    # image: なし
   db:
     environment:
       - MYSQL_ROOT_PASSWORD=secret
@@ -23,6 +24,7 @@ services:
       - type: bind
         source: ./docker/db/init
         target: /docker-entrypoint-initdb.d
+    image: mysql:9.1.0
   mail:
     environment:
       - TZ=Asia/Tokyo
@@ -33,6 +35,7 @@ services:
       - type: volume
         source: compose-mail-volume
         target: /data
+    image: axllent/mailpit:v1.21.5
 volumes:
   compose-db-volume:
   compose-mail-volume:
