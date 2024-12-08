@@ -3,6 +3,10 @@ services:
     # environment: なし
     ports:
       - "8000:8000"
+    volumes:
+      - type: bind
+        source: ./src
+        target: /my-work
   db:
     environment:
       - MYSQL_ROOT_PASSWORD=secret
@@ -12,12 +16,23 @@ services:
       - TZ=Asia/Tokyo
     ports:
       - "3306:3306"
+    volumes:
+      - type: volume
+        source: compose-db-volume
+        target: /var/lib/mysql
+      - type: bind
+        source: ./docker/db/init
+        target: /docker-entrypoint-initdb.d
   mail:
     environment:
       - TZ=Asia/Tokyo
       - MP_DATABASE=/data/mailpit.db
     ports:
       - "8025:8025"
+    volumes:
+      - type: volume
+        source: compose-mail-volume
+        target: /data
 volumes:
   compose-db-volume:
   compose-mail-volume:
