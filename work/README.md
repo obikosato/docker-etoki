@@ -323,6 +323,8 @@ Docker Composeとは、複数のコンテナをまとめて管理するための
 
 ### Docker Composeファイルの作成
 
+- 参考: [Compose ファイル リファレンス — Docker-docs-ja](https://docs.docker.jp/reference/compose-file/toc.html)
+
 work/compose.yamlを作成する。
 
 1. サービスの定義
@@ -354,3 +356,64 @@ work/compose.yamlを作成する。
     - サービスごとにイメージのビルドを定義する
     - `build:` ...イメージのビルドの定義を開始
       - コンテキストのパスを指定
+
+### volumesの書き方について
+
+```yaml
+    volumes:
+      - type: volume
+        source: compose-db-volume
+        target: /var/lib/mysql
+      - type: bind
+        source: ./docker/db/init
+        target: /docker-entrypoint-initdb.d
+```
+
+`container run`の`--mount`オプションの書き方では、以下のようになる。
+
+```sh
+--mount type=volume,source=compose-db-volume,target=/var/lib/mysql
+--mount type=bind,source="$(pwd)"/docker/db/init,target=/docker-entrypoint-initdb.d
+```
+
+一方で、以下のような書き方もできる。
+
+```yaml
+    volumes:
+      - compose-db-volume:/var/lib/mysql
+      - ./docker/db/init:/docker-entrypoint-initdb.d
+```
+
+これは、`--volume`オプションの書き方に相当する。
+
+```sh
+--volume compose-db-volume:/var/lib/mysql
+--volume "$(pwd)"/docker/db/init:/docker-entrypoint-initdb.d
+```
+
+詳細は、書籍の23章のコラムの「--mount」と「--volume」の違いについての説明にもあるとおり、明瞭で安全なのは、`--mount`オプションを使う方法である。
+
+- 参考: [docker-composeのvolumesはlong syntaxで書くのがおすすめ](https://zenn.dev/daifukuninja/articles/5f0f4c99418a36)
+
+### buildの書き方について
+
+以下の三つの書き方がある。
+
+```yaml
+    build:
+      context: ./docker/app
+      dockerfile: Dockerfile
+```
+
+```yaml
+    build:
+      context: ./docker/app
+```
+
+```yaml
+    build: ./docker/app
+```
+
+一つ目は、コンテキストのパスを指定して、Dockerfileを指定する方法。しかし、contextのdockerfileが、Dockerfileである場合は省略して二つ目の書き方ができる。
+さらに、コンテキストのみの指定で良い場合は、三つ目の書き方ができる。
+結果的に、dockerfileを指定する場合は一つ目の書き方、dockerfileを指定しない場合は三つ目の書き方が適していると言える。
