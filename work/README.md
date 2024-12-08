@@ -303,6 +303,8 @@ Docker Composeとは、複数のコンテナをまとめて管理するための
 
 ### Docker Composeの基本コマンド
 
+- 参考: [docker compose | Docker Docs](https://docs.docker.com/reference/cli/docker/compose/)
+
 基本この4つを使う。
 
 - `docker compose up` ...ネットワークの作成、コンテナの**作成**、起動
@@ -313,6 +315,7 @@ Docker Composeとは、複数のコンテナをまとめて管理するための
 - `docker compose down` ...コンテナの停止、**削除**、ネットワークの削除
   - `docker container run --rm`で起動し、停止時に削除するのと同じ  
   - `--volumes` ...ボリュームも削除される
+  - `--rmi all` ...イメージも削除される
 - `docker compose ps` ...コンテナ一覧、状態を確認
 - `docker compose exec` ...起動中のコンテナでコマンドを実行
 
@@ -321,8 +324,19 @@ Docker Composeとは、複数のコンテナをまとめて管理するための
 - `docker compose start` ...コンテナの起動
 - `docker compose stop` ...コンテナの停止
 
+全起動、線削除まとめ。
+
+- `docker compose up --detach --build`
+- `docker compose down --volumes --rmi all`
+
+起動中のサービスのコンテナに入る。
+
+- `docker compose exec サービス名 /bin/sh` ...コンテナに入る
+- `docker compose logs --follow` または `docker compose logs -n 10` ...ログの追跡
+
 ### Docker Composeファイルの作成
 
+- 参考: [Compose file reference | Docker Docs](https://docs.docker.com/reference/compose-file/)
 - 参考: [Compose ファイル リファレンス — Docker-docs-ja](https://docs.docker.jp/reference/compose-file/toc.html)
 
 work/compose.yamlを作成する。
