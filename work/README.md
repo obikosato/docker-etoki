@@ -123,7 +123,9 @@ $ docker container run --rm php:8.4.1 which php
 
 これらをインストールするためのDockerfileを作成し、ビルドしたイメージを使う。
 
-- work-app:1.0.1
+```sh
+docker image build --tag work-app:0.1.0 docker/app
+```
 
 以上より、コンテナ起動コマンドは、以下のようになる。
 
@@ -133,10 +135,9 @@ docker container run \
 --rm \
 --detach \
 --publish 8000:8000 \
-# work-app:1.0.1 \ ...リモートと名前が被ってしまっているのかローカルのものが認識されないので、イメージIDで指定
+# work-app:0.1.0 \ ...リモートと名前が被ってしまっているのかローカルのものが認識されないので、イメージIDで指定
 c8e1a78c1a02 \
-# /usr/local/bin/php --server 0.0.0.0:8000 --docroot /my-work まだないので/で代用
-/usr/local/bin/php --server 0.0.0.0:8000 --docroot /
+/usr/local/bin/php --server 0.0.0.0:8000 --docroot / #/my-workがまだないので/で代用
 ```
 
 - 確認事項
