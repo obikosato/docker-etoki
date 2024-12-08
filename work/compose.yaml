@@ -1,17 +1,14 @@
 services:
   app:
-    # environment: なし
     ports:
       - "8000:8000"
     volumes:
       - type: bind
         source: ./src
         target: /my-work
-    # image: ではなく、build: でDockerfileからイメージをビルド
     build:
       context: ./docker/app
       dockerfile: Dockerfile
-    # build: ./docker/app と簡略化も可能
   db:
     environment:
       - MYSQL_ROOT_PASSWORD=secret
