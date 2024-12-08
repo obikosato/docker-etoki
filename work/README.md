@@ -238,3 +238,58 @@ work
 └── src
     └── index.php
 ```
+
+## コンテナを起動する
+
+### DBコンテナ
+
+```sh
+docker container run \
+--name db \
+--rm \
+--detach \
+--env MYSQL_ROOT_PASSWORD=secret \
+--env MYSQL_USER=app \
+--env MYSQL_PASSWORD=pass1234 \
+--env MYSQL_DATABASE=sample \
+--env TZ=Asia/Tokyo \
+--publish 3306:3306 \
+--mount type=volume,source=work-db-volume,target=/var/lib/mysql \
+--mount type=bind,source="$(pwd)"/docker/db/init,target=/docker-entrypoint-initdb.d \
+--network work-network \
+mysql:9.1.0
+```
+
+### Mailコンテナ
+
+```sh
+docker container run \
+--name mail \
+--rm \
+--detach \
+--env MP_DATABASE=/data/mailpit.db \
+--env TZ=Asia/Tokyo \
+--publish 8025:8025 \
+--mount type=volume,source=work-mail-volume,target=/data \
+--network work-network \
+axllent/mailpit:v1.21.5
+```
+
+### Appコンテナ
+
+```sh
+docker container run \
+--name app \
+--rm \
+--detach \
+--publish 8000:8000 \
+--mount type=bind,source="$(pwd)"/src,target=/my-work \
+--network work-network \
+c8e1a78c1a02 \
+/usr/local/bin/php --server 0.0.0.0:8000 --docroot /my-work
+```
+
+### 確認
+
+- ブラウザで`http://localhost:8000`にアクセスして、JohnとJaneにメールが送信されていることを確認する
+- ブラウザで`http://localhost:8025`にアクセスして、送信されたメールを確認する
