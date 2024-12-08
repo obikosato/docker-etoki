@@ -1,4 +1,14 @@
 services:
   app:
+    # environment: なし
   db:
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_USER=app
+      - MYSQL_PASSWORD=pass1234
+      - MYSQL_DATABASE=sample
+      - TZ=Asia/Tokyo
   mail:
+    environment:
+      - TZ=Asia/Tokyo
+      - MP_DATABASE=/data/mailpit.db
