@@ -311,7 +311,6 @@ Docker Composeとは、複数のコンテナをまとめて管理するための
   - `--detach` ...バックグラウンドで実行
   - `--build` ...イメージの再ビルド
   - `--force-recreate` ...コンテナの再作成
-  - `--no-cache` ...キャッシュを使わない
 - `docker compose down` ...コンテナの停止、**削除**、ネットワークの削除
   - `docker container run --rm`で起動し、停止時に削除するのと同じ  
   - `--volumes` ...ボリュームも削除される
